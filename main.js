@@ -12,4 +12,8 @@ const login = async () => {
 	}
 };
 
+const openModal = () => {
+	document.getElementById('token_modal').style.display = 'block';
+};
+
 document.getElementById('login_button').onclick = login;
