@@ -1,30 +1,50 @@
 Moralis.initialize('ZTRfoT2RUmXJkuQs7sN1TFZn5ASwyCVhUQHh5dhD');
 Moralis.serverURL = 'https://lsybg9ylddo6.usemoralis.com:2053/server';
 
+let currentTrade = {};
+let currentSelectSide;
+let tokens;
+
 const init = async () => {
 	await Moralis.initPlugins();
-	// await Moralis.enable();
+	await Moralis.enableWeb3();
 	await listAvailableTokens();
 };
 
-const listAvailableTokens = async () => {
+async function listAvailableTokens() {
 	const result = await Moralis.Plugins.oneInch.getSupportedTokens({
-		chain: 'eth',
-		// The blockchain you want to use (eth/bsc/polygon)
+		chain: 'eth', // The blockchain you want to use (eth/bsc/polygon)
 	});
-	const tokens = result.tokens;
+	tokens = result.tokens;
 	let parent = document.getElementById('token_list');
 	for (const address in tokens) {
 		let token = tokens[address];
 		let div = document.createElement('div');
+		div.setAttribute('data-address', address);
 		div.className = 'token_row';
 		let html = `
-			<img class="token_list_img" src="${token.logoURI}">
-			<span class="token_list_text">${token.symbol}</span>
-		`;
+        <img class="token_list_img" src="${token.logoURI}">
+        <span class="token_list_text">${token.symbol}</span>
+        `;
 		div.innerHTML = html;
+		div.onclick = () => {
+			selectToken(address);
+		};
 		parent.appendChild(div);
 	}
+}
+function selectToken(address) {
+	closeModal();
+	console.log(tokens);
+	currentTrade[currentSelectSide] = tokens[address];
+	console.log(currentTrade);
+	renderInterface();
+}
+
+const renderInterface = () => {
+	document.getElementById('from_token_img').src = currentTrade.from.logoURI;
+	document.getElementById('from_token_text').innerHTML =
+		currentTrade.from.symbol;
 };
 
 const login = async () => {
@@ -38,7 +58,8 @@ const login = async () => {
 	}
 };
 
-const openModal = () => {
+const openModal = (side) => {
+	currentSelectSide = side;
 	document.getElementById('token_modal').style.display = 'block';
 };
 
@@ -48,6 +69,8 @@ const closeModal = () => {
 
 init();
 
-document.getElementById('from_token_select').onclick = openModal;
+document.getElementById('from_token_select').onclick = () => {
+	openModal('from');
+};
 document.getElementById('modal_close').onclick = closeModal;
 document.getElementById('login_button').onclick = login;
