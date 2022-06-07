@@ -3,12 +3,28 @@ Moralis.serverURL = 'https://lsybg9ylddo6.usemoralis.com:2053/server';
 
 const init = async () => {
 	await Moralis.initPlugins();
-	await Moralis.enable();
-	const tokens = await Moralis.Plugins.oneInch.getSupportedTokens({
+	// await Moralis.enable();
+	await listAvailableTokens();
+};
+
+const listAvailableTokens = async () => {
+	const result = await Moralis.Plugins.oneInch.getSupportedTokens({
 		chain: 'eth',
 		// The blockchain you want to use (eth/bsc/polygon)
 	});
-	console.log(tokens);
+	const tokens = result.tokens;
+	let parent = document.getElementById('token_list');
+	for (const address in tokens) {
+		let token = tokens[address];
+		let div = document.createElement('div');
+		div.className = 'token_row';
+		let html = `
+			<img class="token_list_img" src="${token.logoURI}">
+			<span class="token_list_text">${token.symbol}</span>
+		`;
+		div.innerHTML = html;
+		parent.appendChild(div);
+	}
 };
 
 const login = async () => {

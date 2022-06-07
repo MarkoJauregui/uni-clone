@@ -34,3 +34,12 @@
 	background-color: rgb(83, 83, 83);
 	cursor: pointer;
 }
+
+.token_list_img {
+	width: 40px;
+}
+
+.modal_body {
+	height: 600px;
+	overflow: scroll;
+}
