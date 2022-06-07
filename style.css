@@ -39,7 +39,16 @@
 	width: 40px;
 }
 
-.modal_body {
+.modal-body {
 	height: 600px;
 	overflow: scroll;
+}
+
+.token_row {
+	padding: 5px 10px;
+}
+
+.token_row:hover {
+	background-color: rgb(199, 199, 199);
+	cursor: pointer;
 }
