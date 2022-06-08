@@ -98,6 +98,27 @@ const getQuote = async () => {
 		quote.toTokenAmount / 10 ** quote.toToken.decimals;
 };
 
+const trySwap = async () => {
+	let address = Moralis.User.current().get('ethAddress');
+
+	if (currentTrade.from.symbol !== 'ETH') {
+		let amount = Number(
+			document.getElementById('from_amount').value *
+				10 ** currentTrade.from.decimals
+		);
+		const allowance = await Moralis.Plugins.oneInch.hasAllowance({
+			chain: 'eth', // The blockchain you want to use (eth/bsc/polygon)
+			fromTokenAddress: currentTrade.from.address, // The token you want to swap
+			fromAddress: address, // Your wallet address
+			amount: amount,
+		});
+		console.log(allowance);
+		if (allowance >= amount) {
+		}
+	} else {
+	}
+};
+
 init();
 
 document.getElementById('from_token_select').onclick = () => {
@@ -109,3 +130,4 @@ document.getElementById('to_token_select').onclick = () => {
 document.getElementById('modal_close').onclick = closeModal;
 document.getElementById('login_button').onclick = login;
 document.getElementById('from_amount').onblur = getQuote;
+document.getElementById('swap_button').onclick = trySwap;
