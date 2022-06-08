@@ -125,10 +125,20 @@ const trySwap = async () => {
 			});
 		}
 	}
-	doSwap();
+	let receipt = doSwap(address, amount);
+	alert('Swap Complete');
 };
 
-const doSwap = async () => {};
+const doSwap = (userAddress, amount) => {
+	return Moralis.Plugins.oneInch.swap({
+		chain: 'eth', // The blockchain you want to use (eth/bsc/polygon)
+		fromTokenAddress: currentTrade.from.address, // The token you want to swap
+		toTokenAddress: currentTrade.to.address, // The token you want to receive
+		amount: amount,
+		fromAddress: userAddress, // Your wallet address
+		slippage: 1,
+	});
+};
 
 init();
 
