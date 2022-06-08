@@ -11,7 +11,7 @@ const init = async () => {
 	await listAvailableTokens();
 };
 
-async function listAvailableTokens() {
+const listAvailableTokens= () => {
 	const result = await Moralis.Plugins.oneInch.getSupportedTokens({
 		chain: 'eth', // The blockchain you want to use (eth/bsc/polygon)
 	});
@@ -57,8 +57,9 @@ const login = async () => {
 	try {
 		currentUser = Moralis.User.current();
 		if (!currentUser) {
-			currentUser = await Moralis.web3.authenticate();
+			currentUser = await Moralis.Web3.authenticate();
 		}
+		document.getElementById('swap_button').disabled = false;
 	} catch (error) {
 		console.log(error);
 	}
