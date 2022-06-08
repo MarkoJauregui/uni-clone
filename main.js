@@ -11,7 +11,7 @@ const init = async () => {
 	await listAvailableTokens();
 };
 
-const listAvailableTokens= () => {
+const listAvailableTokens = async () => {
 	const result = await Moralis.Plugins.oneInch.getSupportedTokens({
 		chain: 'eth', // The blockchain you want to use (eth/bsc/polygon)
 	});
@@ -32,7 +32,7 @@ const listAvailableTokens= () => {
 		};
 		parent.appendChild(div);
 	}
-}
+};
 function selectToken(address) {
 	closeModal();
 	console.log(tokens);
@@ -114,11 +114,21 @@ const trySwap = async () => {
 			amount: amount,
 		});
 		console.log(allowance);
-		if (allowance >= amount) {
+		if (!allowance) {
+			await Moralis.Plugins.oneInch.approve({
+				chain: 'eth',
+				// The blockchain you want to use (eth/bsc/polygon)
+				tokenAddress: currentTrade.from.address,
+				// The token you want to swap
+				fromAddress: address,
+				// Your wallet address
+			});
 		}
-	} else {
 	}
+	doSwap();
 };
+
+const doSwap = async () => {};
 
 init();
 
